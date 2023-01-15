@@ -11,16 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Docker login
-      env:
-        DOCKER_USER: ${{secrets.DOCKER_USER}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - uses: azure/docker-login@v1
+    - with:
+        login-server: ghcr.io
+        username: $GITHUB_ACTOR
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag buildtheearth/netlify-cms-auth:$(git rev-parse --short HEAD) --tag buildtheearth/netlify-cms-auth:latest
+      run: docker build . --file Dockerfile --tag ghcr.io/buildtheearth/netlify-cms-auth:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/netlify-cms-auth:latest
     - name: Docker push tag
-      run: docker push buildtheearth/netlify-cms-auth:$(git rev-parse --short HEAD)
+      run: docker push ghcr.io/buildtheearth/netlify-cms-auth:$(git rev-parse --short HEAD)
     - name: Docker push latest
-      run: docker push buildtheearth/netlify-cms-auth:latest
+      run: docker push ghcr.io/buildtheearth/netlify-cms-auth:latest
