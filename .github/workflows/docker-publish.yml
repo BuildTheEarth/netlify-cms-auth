@@ -2,7 +2,7 @@ name: Docker Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
 
@@ -16,8 +16,8 @@ jobs:
       run: |
         echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag buildtheearth/netlify-cms-auth:$(git rev-parse --short HEAD) --tag buildtheearth/netlify-cms-auth:latest
+      run: docker build . --file Dockerfile --tag ghcr.io/buildtheearth/netlify-cms-auth:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/netlify-cms-auth:latest
     - name: Docker push tag
-      run: docker push buildtheearth/netlify-cms-auth:$(git rev-parse --short HEAD)
+      run: docker push ghcr.io/buildtheearth/netlify-cms-auth:$(git rev-parse --short HEAD)
     - name: Docker push latest
-      run: docker push buildtheearth/netlify-cms-auth:latest
+      run: docker push ghcr.io/buildtheearth/netlify-cms-auth:latest
